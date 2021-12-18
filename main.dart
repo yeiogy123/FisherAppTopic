@@ -1,7 +1,7 @@
 
 //import material function lib
-import 'MyLib.dart';
-import 'HomePage.dart';
+import 'utils/MyLib.dart';
+import 'pages/HomePage.dart';
 
 
 void main(){
