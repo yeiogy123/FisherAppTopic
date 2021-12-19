@@ -17,7 +17,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    //var timeList = [DateTime.now(), DateTime.now()];
     return Scaffold(
         appBar: AppBar(
           title: const Text("Fisher"),
@@ -43,16 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       shape: const RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(16.0))),
+                              BorderRadius.all(Radius.circular(16.0))),
                     ),
                   ),
                   ButtonTheme(
-                    //buttonColor: Colors.deepOrange,
                     minWidth: 300.0,
                     height: 100,
                     child: RaisedButton(
                       onPressed: () {
-                        //Scaffold.of(context).removeCurrentSnackBar();
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const OtherDayMode()));
                       },
@@ -60,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(fontSize: 20)),
                       shape: const RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(16.0))),
+                              BorderRadius.all(Radius.circular(16.0))),
                     ),
                   ),
                 ],
@@ -74,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
 class TodayMode extends StatelessWidget {
   const TodayMode({Key? key}) : super(key: key);
 
-  init(DateTime startTime, DateTime finishTime) async {
-    String name = "kershaw";
+  init(DateTime startTime, DateTime finishTime, double workTime) async {
+    String name = "kobe";
     //連結到Mysql資料庫
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2',
@@ -86,16 +83,17 @@ class TodayMode extends StatelessWidget {
     print('connection success!!');
     //insert data into db
     var result = await conn.query(
-        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime")');
+        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime","$workTime")');
     print('upload success!! ${result.insertId}');
     await conn.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    //DateTime startTime = DateTime.now();
-    //DateTime finishTime = DateTime.now();
-    var timeList = [DateTime.now(), DateTime.now()];
+    DateTime startTime = DateTime.now();
+    DateTime finishTime = DateTime.now();
+    int totalTime;
+    double workTime;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Today Mode"),
@@ -123,9 +121,12 @@ class TodayMode extends StatelessWidget {
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.time,
                       use24hFormat: true,
-                      initialDateTime: DateTime.now(),
+                      minuteInterval: 30,
+                      initialDateTime: DateTime.now().add(
+                        Duration(minutes: 30 - DateTime.now().minute % 30),
+                      ),
                       onDateTimeChanged: (data) {
-                        timeList[0] = data;
+                        startTime = data;
                       },
                     )),
               ],
@@ -149,9 +150,12 @@ class TodayMode extends StatelessWidget {
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.time,
                       use24hFormat: true,
-                      initialDateTime: DateTime.now(),
+                      minuteInterval: 30,
+                      initialDateTime: DateTime.now().add(
+                        Duration(minutes: 30 - DateTime.now().minute % 30),
+                      ),
                       onDateTimeChanged: (data) {
-                        timeList[1] = data;
+                        finishTime = data;
                       },
                     )),
               ],
@@ -163,8 +167,12 @@ class TodayMode extends StatelessWidget {
                 minWidth: 100,
                 child: RaisedButton(
                     onPressed: () {
-                      print("start :$timeList[0]\n");
-                      print("finish :$timeList[1]\n");
+                      print(startTime);
+                      print(finishTime);
+                      totalTime = finishTime.difference(startTime).inMinutes;
+                      workTime = totalTime / 60;
+                      print(workTime);
+                      init(startTime, finishTime, workTime);
                       Navigator.pop(context);
                     },
                     child: const Text(
@@ -182,8 +190,8 @@ class TodayMode extends StatelessWidget {
 class OtherDayMode extends StatelessWidget {
   const OtherDayMode({Key? key}) : super(key: key);
 
-  init(DateTime startTime, DateTime finishTime) async {
-    String name = "kershaw";
+  init(DateTime startTime, DateTime finishTime, double workTime) async {
+    String name = "kobe";
     //連結到Mysql資料庫
     final conn = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2',
@@ -194,14 +202,17 @@ class OtherDayMode extends StatelessWidget {
     print('connection success!!');
     //insert data into db
     var result = await conn.query(
-        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime")');
+        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime","$workTime")');
     print('upload success!! ${result.insertId}');
     await conn.close();
   }
+
   @override
   Widget build(BuildContext context) {
     DateTime startTime = DateTime.now();
     DateTime finshTime = DateTime.now();
+    int totalTime;
+    double workTime;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Other Day Mode"),
@@ -222,13 +233,16 @@ class OtherDayMode extends StatelessWidget {
                 )),
             Expanded(
                 child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  use24hFormat: true,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (data) {
-                    startTime = data;
-                  },
-                )),
+              mode: CupertinoDatePickerMode.dateAndTime,
+              use24hFormat: true,
+              minuteInterval: 30,
+              initialDateTime: DateTime.now().add(
+                Duration(minutes: 30 - DateTime.now().minute % 30),
+              ),
+              onDateTimeChanged: (data) {
+                startTime = data;
+              },
+            )),
             const SizedBox(height: 50, width: 100),
             const SizedBox(
                 width: 100,
@@ -241,13 +255,16 @@ class OtherDayMode extends StatelessWidget {
                 )),
             Expanded(
                 child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.dateAndTime,
-                  use24hFormat: true,
-                  initialDateTime: DateTime.now(),
-                  onDateTimeChanged: (data) {
-                    finishTime = data;
-                  },
-                )),
+              mode: CupertinoDatePickerMode.dateAndTime,
+              use24hFormat: true,
+              minuteInterval: 30,
+              initialDateTime: DateTime.now().add(
+                Duration(minutes: 30 - DateTime.now().minute % 30),
+              ),
+              onDateTimeChanged: (data) {
+                finshTime = data;
+              },
+            )),
             const SizedBox(height: 50, width: 100),
             ButtonTheme(
                 buttonColor: Colors.red,
@@ -255,8 +272,10 @@ class OtherDayMode extends StatelessWidget {
                 minWidth: 100,
                 child: RaisedButton(
                     onPressed: () {
-                      print(timeList[0]);
-                      print(timeList[1]);
+                      print(startTime);
+                      print(finshTime);
+                      totalTime = finshTime.difference(startTime).inMinutes;
+                      workTime = totalTime / 60;
                       Navigator.pop(context);
                     },
                     child: const Text(
