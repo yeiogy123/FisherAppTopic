@@ -11,15 +11,16 @@ import 'SearchContactPage.dart';
 import '../utils/NoContent.dart';
 class DashBoardPage extends StatefulWidget {
   @override
-  createState() => new DashBoardPageState();
+  createState() => DashBoardPageState();
 }
 
 class DashBoardPageState extends State<DashBoardPage> {
-  static final globalKey = new GlobalKey<ScaffoldState>();
+  static final globalKey = GlobalKey<ScaffoldState>();
   ProgressDialog progressDialog = ProgressDialog.GetProgressDialog(
       ProgressDialogTitles.LoadingContacts, true);
-  Widget dashBoardWidget = new Container();
+  Widget dashBoardWidget = Container();
   String title = 'Record';
+
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -34,12 +35,12 @@ class DashBoardPageState extends State<DashBoardPage> {
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.0;
-    return new Scaffold(
+    return Scaffold(
       key: globalKey,
-      appBar: new AppBar(
+      appBar: AppBar(
         centerTitle: true,
-        iconTheme: new IconThemeData(color: Colors.white),
-        title: new Text(title),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(title),
       ),
       body: _apiHomePage(),
       floatingActionButton: _floatingActionButton(),
@@ -47,8 +48,10 @@ class DashBoardPageState extends State<DashBoardPage> {
   }
 
   Widget _apiHomePage() {
-    return new Stack(
-      children: <Widget>[dashBoardWidget, progressDialog],
+    return Stack(
+      children: <Widget>[
+        dashBoardWidget,
+        progressDialog],
     );
   }
 
@@ -58,22 +61,25 @@ class DashBoardPageState extends State<DashBoardPage> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
-          child: new FloatingActionButton(
+          child:  FloatingActionButton(
             onPressed: () {
-              navigateToPage(new SearchContactsPages());
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchContactsPages()),
+              );
             },
             heroTag: 'Search Record',
             tooltip: 'Search Record',
-            child: new Icon(
+            child: const Icon(
               Icons.search,
             ),
           ),
         ),
-        new FloatingActionButton(
+        FloatingActionButton(
           onPressed: () {
             _navigateToCreateContactPage(context);
           },
-          child: new Icon(
+          child: const Icon(
             Icons.add,
           ),
           heroTag: 'Search Record',
@@ -86,19 +92,21 @@ class DashBoardPageState extends State<DashBoardPage> {
   void _navigateToCreateContactPage(BuildContext context) async {
     int contactCreationStatus = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => new CreateRecordPage()),
+      MaterialPageRoute(builder: (context) => CreateRecordPage()),
     );
     setState(() {
+      //print(contactCreationStatus);
+      //print(Events.ContactWasCreatedSuccessfully);
       switch (contactCreationStatus) {
         case Events.ContactWasCreatedSuccessfully:
-          handleNavigationDrawerClicks('CONTACTS', false);
-          SnackBar(content:Text('CONTACT_WAS_CREATED_SUCCESSFULLY'));
+          handleNavigationDrawerClicks('Record', false);
+          const SnackBar(content:Text('CONTACT_WAS_CREATED_SUCCESSFULLY'));
           break;
         case Events.UnableToCreateContact:
-          SnackBar(content: Text('UNABLE_TO_CREATE_CONTACT'));
+          const SnackBar(content: Text('UNABLE_TO_CREATE_CONTACT'));
           break;
         case Events.UserHasNotCreatedAnyContact:
-          SnackBar(content:Text('USER_HAS_NOT_PERFORMED_ANY_ACTION'));
+          const SnackBar(content:Text('USER_HAS_NOT_PERFORMED_ANY_ACTION'));
           break;
       }
     });
@@ -111,15 +119,17 @@ class DashBoardPageState extends State<DashBoardPage> {
       }
       if (whatToDo != 'TAPPED_ON_HEADER') {
         Type type = dashBoardWidget.runtimeType;
+        print(type);
         if (title == whatToDo) {
           if (type == RecordPage) {
             RecordPage recordpage = dashBoardWidget as RecordPage;
             recordpage.reloadContactList();
           }
-        } else {
+        } else
+          {
           title = whatToDo;
           switch (title) {
-            case 'CONTACTS':
+            case 'Record':
               progressDialog
                   .ShowProgressWithText(ProgressDialogTitles.LoadingContacts);
               loadContacts();
@@ -130,7 +140,7 @@ class DashBoardPageState extends State<DashBoardPage> {
           }
         }
       } else {
-        SnackBar(content:(Text('TAPPED_ON_SQF_LITE_HEADER')));
+        const SnackBar(content:(Text('TAPPED_ON_SQF_LITE_HEADER')));
       }
     });
   }
@@ -147,28 +157,18 @@ class DashBoardPageState extends State<DashBoardPage> {
         progressDialog.Hide();
         switch (eventObject.id) {
           case Events.ReadContactsSuccessful:
-            dashBoardWidget = new RecordPage(contactList: eventObject.object as List<Contact>);
-            SnackBar(content:Text('CONTACTS_LOADED_SUCCESSFULLY'));
+            dashBoardWidget = RecordPage(contactList: eventObject.object as List<Contact>);
+            const SnackBar(content:Text('CONTACTS_LOADED_SUCCESSFULLY'));
             break;
           case Events.NoContactsFound:
-            dashBoardWidget = new RecordPage(contactList: <Contact>[]);
-            SnackBar(content: Text('NO_CONTACTS_FOUND'));
+            dashBoardWidget = RecordPage(contactList: <Contact>[]);
+            const SnackBar(content: Text('NO_CONTACTS_FOUND'));
             break;
           case Events.NoInternetConnection:
             dashBoardWidget = NoContentFound(
                 'NO_INTERNET_CONNECTION', Icons.signal_wifi_off);
-            SnackBar(content:Text('NO_INTERNET_CONNECTION'));
+            const SnackBar(content:Text('NO_INTERNET_CONNECTION'));
         }
-      });
-    }
-  }
-  void navigateToPage(StatefulWidget statefulWidget) {
-    if (this.mounted) {
-      setState(() {
-        Navigator.push(
-          context,
-          new MaterialPageRoute(builder: (context) => statefulWidget),
-        );
       });
     }
   }

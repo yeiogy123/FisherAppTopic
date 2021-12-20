@@ -1,6 +1,5 @@
 import 'DashBoardPage.dart';
 import '../utils/MyLib.dart';
-import 'RecordPage.dart';
 import 'CheckPage.dart';
 
 class ChoosePage extends StatelessWidget {
@@ -8,7 +7,7 @@ class ChoosePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose what you want')
+        title: const Text('Choose what you want')
       ),
       body: Choose()
     );
@@ -22,21 +21,21 @@ class Choose extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children:<Widget>[
           RaisedButton(
-            child: Text('record the attandence'),
+            child: const Text('record the attendance'),
             onPressed: () => Navigator.push(
               context, MaterialPageRoute(
                 builder:(context)
-                => new DashBoardPage()))
+                => DashBoardPage()))
           ),
           RaisedButton(
-            child: Text('check the attandence'),
+            child: const Text('check the attendance'),
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(
                 builder:(context)
                 => CheckPage()))
           ),
           RaisedButton(
-              child: Text('log out'),
+              child: const Text('log out'),
               onPressed: ()=> Navigator.pop(context)
           )
         ]

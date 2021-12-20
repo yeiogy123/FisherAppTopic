@@ -4,8 +4,8 @@ import '../utils/MyLib.dart';
 import 'ChoosePage.dart';
 
 class HomePage extends StatelessWidget {
-  final TextEditingController Account = new TextEditingController();
-  final TextEditingController Password = new TextEditingController();
+  final TextEditingController Account = TextEditingController();
+  final TextEditingController Password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +13,21 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children:<Widget>[
-          FlutterLogo(),
+          const FlutterLogo(),
           TextField(
               controller: Account,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'please input account:'
               )
           ),
           TextField(
               controller: Password,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'please input password:'
               )
           ),
           RaisedButton(
-            child: Text('entry'),
+            child: const Text('entry'),
             onPressed: () {
               if(BtnEvent(Account, Password)==1)
                 Navigator.push(

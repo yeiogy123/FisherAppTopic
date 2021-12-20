@@ -5,21 +5,21 @@ class CheckPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text('CheckPage')
+            title: const Text('CheckPage')
         ),
         body: Check()
     );
   }
 }
 class Check extends StatelessWidget {
-
+  @override
   Widget build(BuildContext context) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           RaisedButton(
-              child: Text('turn back'),
+              child: const Text('turn back'),
               onPressed: () => Navigator.pop(context)
           )
         ]

@@ -1,4 +1,5 @@
 import 'package:fish/DB/Common.dart';
+import 'package:fish/pages/EditRecordPage.dart';
 import 'package:fish/utils/NoContent.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -6,13 +7,13 @@ import '../utils/Constants.dart';
 import '../utils/ProgressDialog.dart';
 import '../utils/MyLib.dart';
 import '../utils/Contact.dart';
-import 'ChoosePage.dart';
+import 'AddRecordTimePage.dart';
 class RecordPage extends StatefulWidget {
   late List<Contact> contactList;
   late RecordPageState _RecordPageState;
   RecordPage({required this.contactList});
   @override
-  createState()=> _RecordPageState = new RecordPageState(contactList: contactList);
+  createState()=> _RecordPageState = RecordPageState(contactList: contactList);
   void reloadContactList(){
     _RecordPageState.reloadContacts();
   }
@@ -20,10 +21,10 @@ class RecordPage extends StatefulWidget {
 class RecordPageState extends State<RecordPage> {
   List<Contact> contactList;
   late Widget contactListWidget;
-  static final globalKey = new GlobalKey<ScaffoldState>();
+  static final globalKey = GlobalKey<ScaffoldState>();
   ProgressDialog progressDialog = ProgressDialog.GetProgressDialog(
       ProgressDialogTitles.CreatingContact, false);
-  static const opacityCurve = const Interval(0.0, 0.75, curve: Curves.fastOutSlowIn);
+  static const opacityCurve = Interval(0.0, 0.75, curve: Curves.fastOutSlowIn);
   RecordPageState({required this.contactList});
 
   @override
@@ -37,16 +38,17 @@ class RecordPageState extends State<RecordPage> {
   }
 
   Widget loadList(){
-    if(contactList != null && contactList.isNotEmpty)
+    if(contactList != null && contactList.isNotEmpty) {
       contactListWidget = buildContactList();
-    else
+    } else {
       contactListWidget = NoContentFound(Texts.NoContacts, Icons.account_circle);
-    return new Stack(
+    }
+    return Stack(
       children: <Widget>[contactListWidget, progressDialog],
     );
   }
   Widget buildContactList(){
-    return new ListView.builder(
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemBuilder: (context, i)=>
         buildContactRow(contactList[i]),
@@ -55,16 +57,16 @@ class RecordPageState extends State<RecordPage> {
   }
 
   Widget buildContactRow(Contact contact){
-    return new Dismissible(
+    return Dismissible(
       key: Key(contact.name),
-      child: new GestureDetector(
+      child: GestureDetector(
         onTap: ()=> heroAnimation(contact),
-        child: new Card(
-          margin: EdgeInsets.only(top:10.0, bottom: 10.0),
-          child: new Container(
-            child: new Column(
+        child: Card(
+          margin: const EdgeInsets.only(top:10.0, bottom: 10.0),
+          child: Container(
+            child: Column(
               children: <Widget>[
-                new Row(
+                Row(
                   children: <Widget>[
                     contactAvatar(contact),
                     contactDetail(contact)
@@ -72,7 +74,7 @@ class RecordPageState extends State<RecordPage> {
                 )
               ],
             ),
-            margin:EdgeInsets.all(10.0)
+            margin:const EdgeInsets.all(10.0)
           ),
         ),
       ),
@@ -97,17 +99,17 @@ class RecordPageState extends State<RecordPage> {
   void navigateToEditContactPage(BuildContext context, Contact contact) async {
     int contactUpdateStatus = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => new ChoosePage()) // 改成editcontactpage
+      MaterialPageRoute(builder: (context) => EditContactPage(contact))
     );
     setState(() {
       switch(contactUpdateStatus){
         case Events.ContactWasUpdatedSuccessfully:
           reloadContacts();
-          SnackBar(content: Text('ContactWasUpdatedSuccessfully'));
+          const SnackBar(content: Text('ContactWasUpdatedSuccessfully'));
           break;
         case Events.UnableToUpdateContact:
           contactList.add(contact);
-          SnackBar(content: Text('UnableToUpdateContact'));
+          const SnackBar(content: Text('UnableToUpdateContact'));
           break;
         default:
           contactList.add(contact);
@@ -116,14 +118,14 @@ class RecordPageState extends State<RecordPage> {
     });
   }
   Widget dismissContainerEdit(){
-    return new Card(
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: new Container(
+    return Card(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: Container(
         alignment: Alignment.centerRight,
-        color:  Colors.brown,
-        child: new Container(
-          padding: EdgeInsets.only(right:20.0),
-          child: new Icon(
+        color:  Colors.blue,
+        child: Container(
+          padding: const EdgeInsets.only(right:20.0),
+          child: const Icon(
             Icons.edit,
             size: 40.0,
             color: Colors.grey,
@@ -134,14 +136,14 @@ class RecordPageState extends State<RecordPage> {
   }
 
   Widget dismissContainerDelete(){
-    return new Card(
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: new Container(
+    return  Card(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      child: Container(
           alignment: Alignment.centerRight,
           color:  Colors.grey,
-          child: new Container(
-            padding: EdgeInsets.only(right:20.0),
-            child: new Icon(
+          child: Container(
+            padding: const EdgeInsets.only(right:20.0),
+            child: const Icon(
               Icons.delete,
               size: 40.0,
               color: Colors.grey,
@@ -152,10 +154,10 @@ class RecordPageState extends State<RecordPage> {
   }
 
   Widget contactAvatar(Contact contact){
-    return new Hero(
+    return Hero(
       tag: contact.name,
-      createRectTween: (begin, end)=>new MaterialRectCenterArcTween(begin: begin, end:end),
-      child: Icon(
+      createRectTween: (begin, end)=> MaterialRectCenterArcTween(begin: begin, end:end),
+      child: const Icon(
         Icons.accessibility,
       ),
 
@@ -164,9 +166,9 @@ class RecordPageState extends State<RecordPage> {
   }
 
   Widget contactDetail(Contact contact){
-    return new Flexible(
-      child: new Container(
-        child: new Column(
+    return Flexible(
+      child: Container(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -177,44 +179,30 @@ class RecordPageState extends State<RecordPage> {
             textContainer(contact.phone,Colors.blue),
           ],
         ),
-        margin: EdgeInsets.only(left: 20.0),
+        margin: const EdgeInsets.only(left: 20.0),
       ),
     );
   }
 
   Widget textContainer(String string, Color color){
     return Container(
-      child: new Text(
+      child: Text(
         string,
         style:TextStyle(
           color:color,
           fontWeight: FontWeight.normal,
-          fontSize: 16.0
+          fontSize: 12.0
         ),
         textAlign: TextAlign.start,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
-      margin: EdgeInsets.only(bottom:10.0),
+      margin: const EdgeInsets.only(bottom:10.0),
     );
   }
 
   void heroAnimation(Contact contact){
-    Navigator.of(context).push(
-      new PageRouteBuilder<Null>(
-          pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation){
-            return new AnimatedBuilder(
-              animation: animation,
-              builder: (context, child){
-                return new Opacity(
-                    opacity: opacityCurve.transform(animation.value),
-                    child:contactDetail(contact)
-                );}
-            );
-          }
-      )
-    );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => AddRecordTimePage(contact: contact)));
   }
 
   void reloadContacts(){
@@ -226,24 +214,22 @@ class RecordPageState extends State<RecordPage> {
 
   void loadContacts() async{
     EventObject eventObject = await getContacts();
-    if(this.mounted){
+    if(mounted){
       setState(() {
         progressDialog.Hide();
         switch(eventObject.id){
           case Events.ReadContactsSuccessful:
             //contactList = eventObject.object;
-            SnackBar(content:Text('ReadContactsSuccessful'));
+            const SnackBar(content:Text('ReadContactsSuccessful'));
             break;
           case Events.NoContactsFound:
             //contactList = eventObject.object;
-            SnackBar(content:Text('NoContactsFound'));
+            const SnackBar(content:Text('NoContactsFound'));
             break;
           case Events.NoInternetConnection:
-            /*contactListWidget = NoContectFound(
+            contactListWidget = NoContentFound(
               'NoInternetConnection', Icons.signal_wifi_off);
-            )
-             */
-            SnackBar(content: Text('NoInternetConnection'));
+            const SnackBar(content: Text('NoInternetConnection'));
             break;
         }
       });
@@ -256,19 +242,19 @@ class RecordPageState extends State<RecordPage> {
         progressDialog.Hide();
         switch(eventObject.id){
           case Events.ContactWasDeletedSuccessfully:
-            SnackBar(content: Text('ContactWasDeletedSuccessfully'));
+            const SnackBar(content: Text('ContactWasDeletedSuccessfully'));
             break;
           case Events.PleaseProvideTheIdOfTheContactToBeDeleted:
             contactList.add(contact);
-            SnackBar(content: Text('PleaseProvideTheIdOfTheContactToBeDeleted'));
+            const SnackBar(content: Text('PleaseProvideTheIdOfTheContactToBeDeleted'));
             break;
           case Events.NoContactWithProvidedIdExistInDB:
             contactList.add(contact);
-            SnackBar(content: Text('NoContactWithProvidedIdExistInDB'));
+            const SnackBar(content: Text('NoContactWithProvidedIdExistInDB'));
             break;
           case Events.NoInternetConnection:
             contactList.add(contact);
-            SnackBar(content: Text('NoInternetConnection'));
+            const SnackBar(content: Text('NoInternetConnection'));
         }
       });
     }
