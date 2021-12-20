@@ -5,65 +5,44 @@ import '../utils/Contact.dart';
 import '../utils/Constants.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:mysql1/mysql1.dart';
+import 'package:mysql_utils/mysql_utils.dart';
 import 'Common.dart';
 class ContactsDatabase {
-  static final ContactsDatabase _contactsDatabase =
-  new ContactsDatabase._internal();
-
-  ContactsDatabase._internal();
-
-  late Database _database;
-
-  static ContactsDatabase get() {
-    return _contactsDatabase;
-  }
-
-  bool didInit = false;
-
-  Future<Database> _getDb() async {
-    if (!didInit) await _initDatabase();
-    return _database;
-  }
-
-  /**
-   * if exists, deletes.
-   * else, creates.
-   */
-  Future _initDatabase() async {
-    var directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, 'mydatabase.db');
-    _database = await openDatabase(
-        path, version: 1,
-        onCreate: (Database db, int version) async {
-          await db.execute('CREATE TABLE user(id INTEGER PRIMARY KEY, name TEXT, id_number TEXT, ct T)'
-          );
-          await _createContactTable(db);
-
-        },
-        onUpgrade: (Database db, int oldVersion, int newVersion) async {
-          await db.execute("DROP TABLE ${'user'}");
-          await _createContactTable(db);
-        });
-    didInit = true;
-  }
-
-  Future _createContactTable(Database db) {
-    return db.transaction((Transaction txn) async {
-      txn.execute(CreateContactTable);
-    });
-  }
-
+    static ContactsDatabase _contactsDatabase = new ContactsDatabase();
+    ContactsDatabase();
+    late MySqlConnection connect;
+    bool didinit = false;
+    Future init() async{
+      connect = await MySqlConnection.connect(ConnectionSettings(
+          user: "root",
+          password: "ZSP95142",
+          host: "10.0.2.2",
+          port: 3306,
+          db: "fish"
+      ));
+      await connect.query('CREATE TABLE `fish.users` (`id` int(11) NOT NULL AUTO_INCREMENT,`name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`ct` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY(`id`))');
+      didinit = true;
+    }
+    static ContactsDatabase get(){
+      return _contactsDatabase;
+    }
+    Future _getDB() async{
+      if(!didinit) await init();
+      return connect;
+    }
   Future<EventObject> getContactsUsingDB() async {
     try {
-      var db = await ContactsDatabase.get()._getDb();
-      List<Map> contactsMap =
-      await db.rawQuery("Select * from ${'user'}");
+      var db = await _contactsDatabase._getDB();
+      Results contact =
+      await db.query(
+        'SELECT * FROM fish.users'
+      );
       List<Contact> contacts = <Contact>[];
-      if (contactsMap.isNotEmpty) {
-        for (int i = 0; i < contactsMap.length; i++) {
-          contacts.add(Contact.fromMap(contactsMap[i]));
-        }
+      for(int i = 0 ; i < contact.toList().length ; i++) {
+        contacts.add(Contact.fromMap(contact.toList().elementAt(i).fields));
+      }
+      if (contacts.isNotEmpty) {
         return EventObject(id: Events.ReadContactsSuccessful, object: contacts);
       } else {
         return EventObject(id: Events.NoContactsFound);
@@ -72,14 +51,16 @@ class ContactsDatabase {
       print(e.toString());
       return new EventObject(id: Events.NoContactsFound);
     }
+
   }
 
   Future<EventObject> saveContactUsingDB(Contact contact) async {
     try {
-      var db = await ContactsDatabase.get()._getDb();
-      int affectedRows =
-      await db.insert('user', contact.toMap());
-      if (affectedRows > 0) {
+      var db = await _contactsDatabase._getDB();
+      Results affectedRows =
+      await db.query('insert into fish.users (name, fisher_id, ct, job, phone) values(?,?,?,?,?)',
+          [contact.name, contact.id_number, contact.ct, contact.job, contact.phone]);
+      if (affectedRows.isEmpty) {
         return EventObject(
           id: Events.ContactWasCreatedSuccessfully,
         );
@@ -94,11 +75,11 @@ class ContactsDatabase {
 
   Future<EventObject> removeContactUsingDB(Contact contact) async {
     try {
-      var db = await ContactsDatabase.get()._getDb();
+      var db = await ContactsDatabase.get()._getDB();
 
-      int affectedRows = await db.delete('user',
-          where: "${ContactTable.name}=?", whereArgs: [contact.name]);
-      if (affectedRows > 0) {
+      Results affectedRows = await db.delete(table:'user',
+          where: {'name' : contact.name});
+      if (affectedRows.isNotEmpty) {
         return EventObject(
           id: Events.ContactWasDeletedSuccessfully,
         );
@@ -114,11 +95,13 @@ class ContactsDatabase {
 
   Future<EventObject> updateContactUsingDB(Contact contact) async {
     try {
-      var db = await ContactsDatabase.get()._getDb();
-      int affectedRows = await db.update('user', contact.toMap(),
-          where: "${ContactTable.name}=?", whereArgs: [contact.name]);
+      var db = await ContactsDatabase.get()._getDB();
+      Results affectedRows = await db.update(
+          table: 'user',
+          updateData: contact.toMap(),
+          where: {'name' : contact.name});
 
-      if (affectedRows > 0) {
+      if (affectedRows.isNotEmpty) {
         return EventObject(
           id: Events.ContactWasUpdatedSuccessfully,
         );
@@ -134,11 +117,14 @@ class ContactsDatabase {
 
   Future<EventObject> searchContactsUsingDB(String searchQuery) async {
     try {
-      var db = await ContactsDatabase.get()._getDb();
+      var db = await ContactsDatabase.get()._getDB();
 
       //Like query not used here in searching cuz its not working for sqflite
       List<Map> contactsMap =
-      await db.rawQuery("Select * from ${'user'}");
+      await db.getone(
+        table:'user',
+        where:{'name': searchQuery}
+      );
 
       List<Contact> contacts = <Contact>[];
       if (contactsMap.isNotEmpty) {
