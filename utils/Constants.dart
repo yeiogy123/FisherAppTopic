@@ -13,7 +13,8 @@ class Events {
   static const int NoContactWithProvidedIdExistInDB = 510;
   static const int SearchContactsSuccessful = 511;
   static const int NoContactForYourSearchQuery = 512;
-  static int UnableToDeleteContact = 513;
+  static const int UnableToDeleteContact = 513;
+  static const int UserHasNotPerformedUpdateAction = 514;
 }
 class Texts {
   static const String AppName = "Contacts";

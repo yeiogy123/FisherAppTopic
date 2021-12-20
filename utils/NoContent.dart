@@ -1,4 +1,4 @@
-import '../Mylib.dart';
+import 'Mylib.dart';
 class NoContentFound extends StatelessWidget {
   final String noContentText;
   final IconData noContentIconData;
