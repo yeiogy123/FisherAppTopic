@@ -1,19 +1,24 @@
+import 'package:fish/utils/Contact.dart';
+import 'package:fish/utils/MyLib.dart';
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+class AddRecordTimePage extends StatefulWidget {
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
+  late String title;
+  late Contact contact;
+  AddRecordTimePage({required this.contact});
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AddRecordPageState createState() => _AddRecordPageState(contact:contact);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AddRecordPageState extends State<AddRecordTimePage> {
+  late Contact contact;
+  _AddRecordPageState({
+    required this.contact});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const TodayMode()));
+                            builder: (context) => TodayMode(contact: contact)));
                       },
                       child: const Text(
                         "Today",
@@ -41,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       shape: const RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(16.0))),
+                          BorderRadius.all(Radius.circular(16.0))),
                     ),
                   ),
                   ButtonTheme(
@@ -50,40 +55,64 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const OtherDayMode()));
+                            builder: (context) => OtherDayMode(contact : contact)));
                       },
                       child: const Text("Other Day",
                           style: TextStyle(fontSize: 20)),
                       shape: const RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(16.0))),
+                          BorderRadius.all(Radius.circular(16.0))),
                     ),
                   ),
                 ],
               ),
             );
           },
-        ));
+        ),
+      floatingActionButton: _floatingActionButton(),
+    );
+  }
+  Widget _floatingActionButton() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child:  FloatingActionButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
 class TodayMode extends StatelessWidget {
-  const TodayMode({Key? key}) : super(key: key);
+  late Contact contact;
+  TodayMode({required this.contact});
 
-  init(DateTime startTime, DateTime finishTime, double workTime) async {
-    String name = "kobe";
+  Future ToDB(DateTime startTime, DateTime finishTime, double workTime) async {
     //連結到Mysql資料庫
-    final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2',
+    MySqlConnection conn = await MySqlConnection.connect(ConnectionSettings(
+        user: "root",
+        password: "ZSP95142",
+        host: "10.0.2.2",
         port: 3306,
-        user: 'root',
-        db: 'sql_turtorial',
-        password: 'root'));
+        db: "fish"));
     print('connection success!!');
+    //await conn.query('CREATE TABLE `timeRecord`(`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,`startTime` timestamp,`finishTime` timestamp,`workTime` double,FOREIGN KEY(`name`) REFERENCES users(`name`))');
     //insert data into db
-    var result = await conn.query(
-        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime","$workTime")');
-    print('upload success!! ${result.insertId}');
+    print(this.contact.name);
+    String name = contact.name;
+    Results affectedRows =
+    await conn.query('insert into fish.timerecord(name, startTime, finishTime, workTime) values("$name", "$startTime", "$finishTime", "$workTime")');
+    if(affectedRows.isNotEmpty)
+      print('success');
     await conn.close();
   }
 
@@ -171,7 +200,7 @@ class TodayMode extends StatelessWidget {
                       totalTime = finishTime.difference(startTime).inMinutes;
                       workTime = totalTime / 60;
                       print(workTime);
-                      init(startTime, finishTime, workTime);
+                      ToDB(startTime, finishTime, workTime);
                       Navigator.pop(context);
                     },
                     child: const Text(
@@ -187,22 +216,25 @@ class TodayMode extends StatelessWidget {
 }
 
 class OtherDayMode extends StatelessWidget {
-  const OtherDayMode({Key? key}) : super(key: key);
-
-  init(DateTime startTime, DateTime finishTime, double workTime) async {
+  late Contact contact;
+  OtherDayMode({required this.contact});
+  ToDB(DateTime startTime, DateTime finishTime, double workTime) async {
     String name = "kobe";
     //連結到Mysql資料庫
     final conn = await MySqlConnection.connect(ConnectionSettings(
-        host: '10.0.2.2',
+        user: "root",
+        password: "ZSP95142",
+        host: "10.0.2.2",
         port: 3306,
-        user: 'root',
-        db: 'sql_turtorial',
-        password: 'root'));
+        db: "fish"));
     print('connection success!!');
+    print(this.contact.name);
+    String name2 = contact.name;
+    Results affectedRows =
+    await conn.query('insert into fish.timerecord(name, startTime, finishTime, workTime) values("$name2", "$startTime", "$finishTime", "$workTime")');
+    if(affectedRows.isNotEmpty)
+      print('success');
     //insert data into db
-    var result = await conn.query(
-        'insert into sql_turtorial.fisher(name, start_time, finish_time) values ("$name","$startTime","$finishTime","$workTime")');
-    print('upload success!! ${result.insertId}');
     await conn.close();
   }
 
@@ -232,16 +264,16 @@ class OtherDayMode extends StatelessWidget {
                 )),
             Expanded(
                 child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.dateAndTime,
-              use24hFormat: true,
-              minuteInterval: 30,
-              initialDateTime: DateTime.now().add(
-                Duration(minutes: 30 - DateTime.now().minute % 30),
-              ),
-              onDateTimeChanged: (data) {
-                startTime = data;
-              },
-            )),
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  use24hFormat: true,
+                  minuteInterval: 30,
+                  initialDateTime: DateTime.now().add(
+                    Duration(minutes: 30 - DateTime.now().minute % 30),
+                  ),
+                  onDateTimeChanged: (data) {
+                    startTime = data;
+                  },
+                )),
             const SizedBox(height: 50, width: 100),
             const SizedBox(
                 width: 100,
@@ -254,16 +286,16 @@ class OtherDayMode extends StatelessWidget {
                 )),
             Expanded(
                 child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.dateAndTime,
-              use24hFormat: true,
-              minuteInterval: 30,
-              initialDateTime: DateTime.now().add(
-                Duration(minutes: 30 - DateTime.now().minute % 30),
-              ),
-              onDateTimeChanged: (data) {
-                finshTime = data;
-              },
-            )),
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  use24hFormat: true,
+                  minuteInterval: 30,
+                  initialDateTime: DateTime.now().add(
+                    Duration(minutes: 30 - DateTime.now().minute % 30),
+                  ),
+                  onDateTimeChanged: (data) {
+                    finshTime = data;
+                  },
+                )),
             const SizedBox(height: 50, width: 100),
             ButtonTheme(
                 buttonColor: Colors.red,
@@ -275,6 +307,7 @@ class OtherDayMode extends StatelessWidget {
                       print(finshTime);
                       totalTime = finshTime.difference(startTime).inMinutes;
                       workTime = totalTime / 60;
+                      ToDB(startTime, finshTime, workTime);
                       Navigator.pop(context);
                     },
                     child: const Text(
