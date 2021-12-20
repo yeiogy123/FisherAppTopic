@@ -21,7 +21,7 @@ class ContactsDatabase {
           port: 3306,
           db: "fish"
       ));
-      await connect.query('CREATE TABLE `fish.users` (`id` int(11) NOT NULL AUTO_INCREMENT,`name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`ct` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY(`id`))');
+      await connect.query('CREATE TABLE `users` (`id` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`ct` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY(`name`))');
       didinit = true;
     }
     static ContactsDatabase get(){
@@ -39,9 +39,11 @@ class ContactsDatabase {
         'SELECT * FROM fish.users'
       );
       List<Contact> contacts = <Contact>[];
+      int complete = 0;
       for(int i = 0 ; i < contact.toList().length ; i++) {
         contacts.add(Contact.fromMap(contact.toList().elementAt(i).fields));
       }
+      complete = await 1;
       if (contacts.isNotEmpty) {
         return EventObject(id: Events.ReadContactsSuccessful, object: contacts);
       } else {

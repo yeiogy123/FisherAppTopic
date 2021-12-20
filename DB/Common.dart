@@ -10,6 +10,8 @@ ContactsDatabase DB = ContactsDatabase.get();
 Future<EventObject> saveContact(Contact contact) async{
   EventObject eventObject = await DB.saveContactUsingDB(contact) as EventObject;
   print("save successfully.\n");
+  //print("id",);
+  //print(eventObject.id);
   return eventObject;
 }
 Future<EventObject> removeContact(Contact contact) async{
@@ -26,6 +28,7 @@ Future<EventObject> searchContact(String query) async {
 }
 Future<EventObject> getContacts() async{
   EventObject eventObject = await DB.getContactsUsingDB() as EventObject;
+  print('get successfully');
   return eventObject;
 }
 Future<EventObject> searchContactsAvailable(String query) async{
