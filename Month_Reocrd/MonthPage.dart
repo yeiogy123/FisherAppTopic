@@ -9,12 +9,9 @@ int choose_day = datetime.day;
 String day_text = ' ';
 int who=0;
 
-void main() {
-  runApp(const Myapp());
-}
 
-class Myapp extends StatelessWidget {
-  const Myapp({Key? key}) : super(key: key);
+class Checkapp extends StatelessWidget {
+  const Checkapp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +27,16 @@ class Myapp extends StatelessWidget {
                   fontSize: 30,
                   fontWeight: FontWeight.bold)),
         ),
-        body: HomePage(),
+        body: CheckPage(),
       ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class CheckPage extends StatefulWidget {
+  const CheckPage({Key? key}) : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _CheckPageState createState() => _CheckPageState();
 }
 
 class People {
@@ -61,7 +58,7 @@ List<People> listItems = [
   People(name: 'Grave', hr: '75'),
 ];
 
-class _HomePageState extends State<HomePage> {
+class _CheckPageState extends State<CheckPage> {
   //const _HomePageState({Key? key}) : super(key: key);
 
   @override
