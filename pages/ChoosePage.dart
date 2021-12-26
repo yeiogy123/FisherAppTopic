@@ -1,3 +1,5 @@
+import 'package:fish/Month_Reocrd/MonthPage.dart';
+
 import 'DashBoardPage.dart';
 import '../utils/MyLib.dart';
 import 'CheckPage.dart';
@@ -32,7 +34,7 @@ class Choose extends StatelessWidget {
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(
                 builder:(context)
-                => CheckPage()))
+                => Checkapp()))
           ),
           RaisedButton(
               child: const Text('log out'),
