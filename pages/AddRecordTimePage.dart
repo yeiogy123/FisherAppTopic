@@ -1,3 +1,4 @@
+import 'package:fish/DB/timeDB.dart';
 import 'package:fish/utils/Contact.dart';
 import 'package:fish/utils/MyLib.dart';
 import 'package:mysql1/mysql1.dart';
@@ -5,7 +6,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+timeDatabase TDB = timeDatabase.get();
 class AddRecordTimePage extends StatefulWidget {
 
   late String title;
@@ -105,12 +106,17 @@ class TodayMode extends StatelessWidget {
         port: 3306,
         db: "fish"));
     print('connection success!!');
-    //await conn.query('CREATE TABLE `timeRecord`(`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,`startTime` timestamp,`finishTime` timestamp,`workTime` double,FOREIGN KEY(`name`) REFERENCES users(`name`))');
+    //await conn.query('CREATE TABLE `timeRecord`
+    // (`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+    // `startTime` timestamp,`finishTime` timestamp,
+    // `workTime` double,
+    // FOREIGN KEY(`name`) REFERENCES users(`name`))');
     //insert data into db
     print(this.contact.name);
     String name = contact.name;
     Results affectedRows =
-    await conn.query('insert into fish.timerecord(name, startTime, finishTime, workTime) values("$name", "$startTime", "$finishTime", "$workTime")');
+    await conn.query('insert into fish.timerecord('
+        'name, startTime, finishTime, workTime) values("$name", "$startTime", "$finishTime", "$workTime")');
     if(affectedRows.isNotEmpty)
       print('success');
     await conn.close();
@@ -201,6 +207,13 @@ class TodayMode extends StatelessWidget {
                       workTime = totalTime / 60;
                       print(workTime);
                       ToDB(startTime, finishTime, workTime);
+                      Time temp = Time(
+                          name:contact.name,
+                          startTime: startTime,
+                          finishTime: finishTime,
+                          workTime: workTime
+                      );
+                      TDB.storeSplitTimeUsingDB(temp);
                       Navigator.pop(context);
                     },
                     child: const Text(
@@ -241,7 +254,7 @@ class OtherDayMode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime startTime = DateTime.now();
-    DateTime finshTime = DateTime.now();
+    DateTime finishTime = DateTime.now();
     int totalTime;
     double workTime;
     return Scaffold(
@@ -293,7 +306,7 @@ class OtherDayMode extends StatelessWidget {
                     Duration(minutes: 30 - DateTime.now().minute % 30),
                   ),
                   onDateTimeChanged: (data) {
-                    finshTime = data;
+                    finishTime = data;
                   },
                 )),
             const SizedBox(height: 50, width: 100),
@@ -304,10 +317,18 @@ class OtherDayMode extends StatelessWidget {
                 child: RaisedButton(
                     onPressed: () {
                       print(startTime);
-                      print(finshTime);
-                      totalTime = finshTime.difference(startTime).inMinutes;
+                      print(finishTime);
+                      totalTime = finishTime.difference(startTime).inMinutes;
                       workTime = totalTime / 60;
-                      ToDB(startTime, finshTime, workTime);
+                      ToDB(startTime, finishTime, workTime);
+                      Time temp = Time(
+                          name:contact.name,
+                          startTime: startTime,
+                          finishTime: finishTime,
+                          workTime: workTime
+                      );
+                      TDB.storeSplitTimeUsingDB(temp);
+
                       Navigator.pop(context);
                     },
                     child: const Text(
