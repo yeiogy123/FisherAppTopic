@@ -26,7 +26,7 @@ class timeDatabase {
     return _timeDatabase;
   }
   Future _getDB() async{
-    if(!initDB) await init();iiii
+    if(!initDB) await init();
     return cnt;
   }
 
