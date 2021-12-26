@@ -37,7 +37,7 @@ class timeDatabase {
 
   }
 
-  Future<EventObject> gettTimeUsingDB() async {
+  Future<EventObject> gettTotalUsingDB() async {
     var db = await _timeDatabase._getDB();
     Results contact = await db.query('SELECT  `sq`.*,(`sq`.`end_index` - `sq`.`start_index` + 1) as `count`FROM (SELECT`user_id`,(HOUR(`start`) * 60 + MINUTE(`start`)) DIV 30 as `start_index`,(HOUR(`end`) * 60 + MINUTE(`end`)) DIV 30 as `end_index`FROM`table1`) AS `sq`');
 
