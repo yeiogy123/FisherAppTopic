@@ -124,8 +124,12 @@ class TodayMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime startTime = DateTime.now();
-    DateTime finishTime = DateTime.now();
+    DateTime startTime = DateTime.now().add(Duration(
+        minutes: 30 - DateTime.now().minute % 30,
+        seconds: -DateTime.now().second));
+    DateTime finishTime = DateTime.now().add(Duration(
+        minutes: 30 - DateTime.now().minute % 30,
+        seconds: -DateTime.now().second));
     int totalTime;
     double workTime;
     return Scaffold(
@@ -253,8 +257,12 @@ class OtherDayMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime startTime = DateTime.now();
-    DateTime finishTime = DateTime.now();
+    DateTime startTime = DateTime.now().add(Duration(
+        minutes: 30 - DateTime.now().minute % 30,
+        seconds: -DateTime.now().second));
+    DateTime finishTime = DateTime.now().add(Duration(
+        minutes: 30 - DateTime.now().minute % 30,
+        seconds: -DateTime.now().second));
     int totalTime;
     double workTime;
     return Scaffold(
