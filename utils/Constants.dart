@@ -51,6 +51,12 @@ class ContactTable {
   static const String ct = "ct";
   static const String job = "job";
 }
+class TimeDataTable{
+  static const String name = 'name';
+  static const String startTime = 'startTime';
+  static const String endTime = 'endTime';
+  static const String workTime = 'workTime';
+}
 class EventObject{
   int id;
   Object object;
