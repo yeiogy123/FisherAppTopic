@@ -69,10 +69,11 @@ class timeDatabase {
     // Create a table
     /*await cntdb.query(
         'CREATE TABLE `splittime` ( '
+            '`id` int not null auto_increment,'
             '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
             '`day` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            '`storeform` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            ' PRIMARY KEY (`name`) )');
+            '`storeform` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
+            ' PRIMARY KEY (`id`) )');
 
      */
 
