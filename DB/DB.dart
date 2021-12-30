@@ -14,15 +14,31 @@ class ContactsDatabase {
     late MySqlConnection connect;
     bool didinit = false;
     Future init() async{
-      connect = await MySqlConnection.connect(ConnectionSettings(
+      this.connect = await MySqlConnection.connect(ConnectionSettings(
           user: "root",
           password: "ZSP95142",
           host: "10.0.2.2",
           port: 3306,
           db: "fish"
       ));
-      await connect.query('CREATE TABLE `users` (`id` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`ct` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY(`name`))');
+      /*await connect.query('CREATE TABLE `users` '
+          '(`id` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+          '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
+          '`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+          '`ct` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+          '`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+          '`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
+          'PRIMARY KEY(`name`))');
+
+       */
       didinit = true;
+    }
+    void close(){
+      connect.close();
+      didinit = false;
+    }
+    MySqlConnection getConnect(){
+      return connect;
     }
     static ContactsDatabase get(){
       return _contactsDatabase;
@@ -31,6 +47,16 @@ class ContactsDatabase {
       if(!didinit) await init();
       return connect;
     }
+    Future getContactsForTime() async{
+      try{
+        var db = await _contactsDatabase._getDB();
+        Results contact = await db.query('SELECT * FROM fish.users');
+        print(contact);
+      }catch(e){
+        print('error');
+        print(e.toString());
+      }
+    }
   Future<EventObject> getContactsUsingDB() async {
     try {
       var db = await _contactsDatabase._getDB();
@@ -38,11 +64,13 @@ class ContactsDatabase {
       await db.query(
         'SELECT * FROM fish.users'
       );
+      print(contact);
       List<Contact> contacts = <Contact>[];
       int complete = 0;
       for(int i = 0 ; i < contact.toList().length ; i++) {
         contacts.add(Contact.fromMap(contact.toList().elementAt(i).fields));
       }
+      await db.close();
       complete = await 1;
       if (contacts.isNotEmpty) {
         return EventObject(id: Events.ReadContactsSuccessful, object: contacts);
