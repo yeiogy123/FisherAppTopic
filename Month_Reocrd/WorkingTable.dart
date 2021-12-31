@@ -271,7 +271,10 @@ class Day_24hr extends StatelessWidget {
   }
   Future ToDB() async {
     split_time_table a = split_time_table.get();
+    print(c_day);
+    print(d);
     form = await a.day_work_table(name, d, c_day);
+    print('table = ');
     print(form);
   }
 }
