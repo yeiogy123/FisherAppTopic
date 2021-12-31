@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../DB/timeDB.dart';
+import 'dart:async';
+import 'package:mysql1/mysql1.dart';
 
 List<int> form=[
-  1,0,1,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,0,0,0,0
@@ -15,6 +18,7 @@ class Day_24hr extends StatelessWidget {
   Day_24hr({Key? key, this.name='',this.c_day=0}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    ToDB();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue[200],
@@ -264,5 +268,10 @@ class Day_24hr extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future ToDB() async {
+    split_time_table a = split_time_table.get();
+    form = await a.day_work_table(name, d, c_day);
+    print(form);
   }
 }
