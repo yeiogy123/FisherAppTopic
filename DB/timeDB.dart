@@ -228,7 +228,15 @@ class split_time_table{
       0,0,0,0,0,0,0,0,0,0,0,0];
     try{
       var db = await _split_time_table._getDB();
-      Results contact = await db.query('SELECT * FROM fish.splittime');
+      String date = d.toString().substring(0, 10);
+      if(c_day < 10) {
+        date = date.replaceRange(8, 9, '0');
+        date = date.replaceRange(9, 10, c_day.toString());
+      }
+      else
+        date = date.replaceRange(8, 10, c_day.toString());
+      print(date);
+      Results contact = await db.query('SELECT * FROM fish.splittime where (day="$date") and (name="$name") ');
       List<splitTimeData>  contacts = <splitTimeData> [];
       print('hi');
       print(contact.toList().length);
@@ -240,17 +248,10 @@ class split_time_table{
         print(contacts.elementAt(num));
         num++;
       }
-      /*for(int i =0; contacts[i].name!=null ;i++) {
-        print(contacts[i]);
-        /*if(name==contacts[i].name && d.month == contacts[i].day) {
-          List<int> r = contacts[i].storeform;
-          for (int j = 0; j < 48; j++) {
-            if(r[j]=='1'){
-              table[j] = 1;
-            }
-          }
-        }*/
-      }*/
+        for(var a in contacts) {
+          for (int i = a.start; i < a.end; i++)
+            table[i] = 1;
+        }
       return table;//contacts;
     }catch(e){
       print('error');
