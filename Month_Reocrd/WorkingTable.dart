@@ -7,9 +7,12 @@ List<int> form=[
   0,0,0,0,0,0,0,0,0,0,0,0
 ];
 
+DateTime d = DateTime.now();
+
 class Day_24hr extends StatelessWidget {
   String name='';
-  Day_24hr({Key? key, this.name=''}) : super(key: key);
+  int c_day=0;
+  Day_24hr({Key? key, this.name='',this.c_day=0}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
