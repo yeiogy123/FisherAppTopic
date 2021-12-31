@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:fish/utils/Contact.dart';
 import 'package:fish/DB/Common.dart';
 import 'package:fish/DB/DB.dart';
 import 'package:fish/utils/Constants.dart';
@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 import 'Calender.dart';
 import 'WorkingTable.dart';
+import 'package:fish/DB/timeDB.dart';
 
 DateTime datetime = DateTime.now();
 // ignore: non_constant_identifier_names
 int choose_day = datetime.day;
+int choose_year = datetime.year;
+int choose_month = datetime.month;
 // ignore: non_constant_identifier_names
 String day_text = ' ';
 int who=0;
@@ -47,23 +50,17 @@ class CheckPage extends StatefulWidget {
 }
 
 class People {
-  final String name;
-  final String hr;
+  //final String name;
+  String name;
+  //final String hr;
+  String month_hr;
 
-  People({required this.name, required this.hr});
+  String today_hr;
+
+  People({required this.name, required this.month_hr, required this.today_hr});
 }
 
-List<People> listItems = [
-  People(name: 'Andy', hr: '10'),
-  People(name: 'Eddie', hr: '32'),
-  People(name: 'Jane', hr: '45'),
-  People(name: 'Unkko', hr: '42'),
-  People(name: 'Odie', hr: '6'),
-  People(name: 'Odysseus', hr: '17'),
-  People(name: 'Cart', hr: '12'),
-  People(name: 'Kane', hr: '32'),
-  People(name: 'Grave', hr: '75'),
-];
+List<People> listItems = [];
 
 class _CheckPageState extends State<CheckPage> {
   //const _HomePageState({Key? key}) : super(key: key);
@@ -84,7 +81,7 @@ class _CheckPageState extends State<CheckPage> {
                     }
                 ),),
                 title: Text(listItems[index].name),
-                subtitle: Text('Today\'s hour: ' + listItems[index].hr),
+                subtitle: Text('Today\'s working hour: ' + listItems[index].today_hr + ' Month\'s working hour: ' + listItems[index].month_hr),
               );
             },
           ),
@@ -122,11 +119,37 @@ class _CheckPageState extends State<CheckPage> {
   void jump_daywork(BuildContext context, who) {
     Navigator.push(context,
         MaterialPageRoute(
-            builder: (context) => Day_24hr(name: listItems[who].name)));
+            builder: (context) => Day_24hr(name: listItems[who].name, c_day: choose_day)));
   }
 
   Future ToDB() async {
     ContactsDatabase c = ContactsDatabase.get();
-    await c.getContactsForTime();
+    List<Contact> a = await c.getContactsForTime();
+    listItems.clear();
+    int a_length = a.toList().length;
+    for(int i = 0 ; i < a_length ; i++){
+      listItems.add(People(name: a.elementAt(i).name, month_hr:'0', today_hr:'0'));
+    }
+    timeDatabase d = timeDatabase.get();
+    List<Time> b = await d.usersGettime();
+    for(int j = 0 ; j < b.toList().length ; j++){
+      for(int k = 0 ; k < a_length ; k++){
+        if(b.elementAt(j).name==listItems[k].name){
+          DateTime cmp = b.elementAt(j).startTime;
+          if(cmp.month==choose_month && cmp.year==choose_year){
+            double temp = double.parse(listItems[k].month_hr);
+            temp = temp + b.elementAt(j).workTime;
+            listItems[k].month_hr= temp.toStringAsFixed(1);
+            if(cmp.day==choose_day) {
+              double today = double.parse(listItems[k].today_hr);
+              today = today + b
+                  .elementAt(j)
+                  .workTime;
+              listItems[k].today_hr = today.toStringAsFixed(1);
+            }
+          }
+        }
+      }
+    }
   }
 }
