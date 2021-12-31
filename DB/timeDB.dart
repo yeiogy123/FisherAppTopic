@@ -47,7 +47,22 @@ class splitTimeData{
     return json.decode(storeForm);
   }*/
   static List<int> getTheList(String target){
-    return json.decode(target) as List<int>;
+    List<int> output = List.filled(48, 0);
+    int posi = 0;
+    print(target);
+    for(String i in target.characters){
+      if(i.compareTo('1') == 0 ){
+        output[posi] = 1;
+        //print(output[posi]);
+        posi++;
+      } else if (i.compareTo('0') == 0) {
+        output[posi] = 0;
+        //print(output[posi]);
+        posi++;
+      }
+    }
+    //print(output);
+    return output;
   }
   String storeStringFromList(){
     this.storeForm = split.toString();
@@ -58,8 +73,6 @@ class splitTimeData{
     String d=map['day'];
     String s=map['storeform'];
     List<int> num = getTheList(s);
-    print('num = ');
-    print(num);
     int start=0, end=0;
     int status = 0;
     for(int i = 0; i< 48 ; i++){
@@ -92,19 +105,16 @@ class timeDatabase {
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'Lin15051780!'));
+        password: 'ZSP95142'));
 
     // Create a table
-    /*await cntdb.query(
+    await cntdb.query(
         'CREATE TABLE `splittime` ( '
             '`id` int not null auto_increment,'
             '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
             '`day` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
             '`storeform` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
             ' PRIMARY KEY (`id`) )');
-
-     */
-
     initDB = true;
   }
 
@@ -120,8 +130,8 @@ class timeDatabase {
       var db = await _timeDatabase._getDB();
       Results contact = await db.query('SELECT * FROM fish.timerecord');
       List<Time>  contacts = <Time>[];
-      for(int i=0 ; i< contact.toList().length; i++){
-        contacts.add(Time.fromMap(contact.toList().elementAt(i).fields));
+      for(var i in contact){
+        contacts.add(Time.fromMap(i.fields));
       }
       return contacts;
     }catch(e){
@@ -132,19 +142,6 @@ class timeDatabase {
   }
 
   Future storeSplitTimeUsingDB(Time t) async {
-    var db = await _timeDatabase._getDB();
-    //Results contact = await db.query('SELECT`user_id`,(HOUR(`start`) * 60 + MINUTE(`start`)) DIV 30 as `start_index`,(HOUR(`end`) * 60 + MINUTE(`end`)) DIV 30 as `end_index`FROM`table1`');
-    /*Results Data = await db.quert(
-       'SELECT * FROM fish.timeRecord where name = ?', t.name
-     );
-     int flag = 0;
-     List<Time> TimeData = <Time>[];
-     for( int i = 0 ; i < Data.toList().length ; i++ ){
-       TimeData.add(Time.fromMap(Data.toList().elementAt(i).fields));
-     }
-     flag = 1;
-
-      */
     splitTimeData FinalTimeData;
     int startTimeExceed = 0, endTimeExceed = 0;
     if(t.startTime.minute > 30)
@@ -179,13 +176,6 @@ class timeDatabase {
     print('finish');
   }
 
-/*Future<EventObject> gettTimeUsingDB() async {
-    var db = await _timeDatabase._getDB();
-    //Results contact = await db.query('SELECT  `sq`.*,(`sq`.`end_index` - `sq`.`start_index` + 1) as `count`FROM (SELECT`user_id`,(HOUR(`start`) * 60 + MINUTE(`start`)) DIV 30 as `start_index`,(HOUR(`end`) * 60 + MINUTE(`end`)) DIV 30 as `end_index`FROM`table1`) AS `sq`');
-
-  }
-
-   */
 }
 
 class split{
@@ -212,8 +202,14 @@ class split_time_table{
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'Lin15051780!'));
-
+        password: 'ZSP95142'));
+    await cntdb.query(
+        'CREATE TABLE `splittime` ( '
+            '`id` int not null auto_increment,'
+            '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
+            '`day` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
+            '`storeform` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
+            ' PRIMARY KEY (`id`) )');
     initDB = true;
   }
 
@@ -234,13 +230,15 @@ class split_time_table{
       var db = await _split_time_table._getDB();
       Results contact = await db.query('SELECT * FROM fish.splittime');
       List<splitTimeData>  contacts = <splitTimeData> [];
-      //print(contact);
       print('hi');
       print(contact.toList().length);
-      for(int i=0 ; i< contact.toList().length; i++){
-        print(splitTimeData.fromMap(contact.toList().elementAt(i).fields));
-        //contacts.add(splitTimeData.fromMap(contact.toList().elementAt(i).fields));
-        //print(contacts[i]);
+      int num = 0 ;
+      for(var i in contact){
+        print(i.fields);
+        //print(splitTimeData.fromMap(i.fields));
+        contacts.add(splitTimeData.fromMap(i.fields));
+        print(contacts.elementAt(num));
+        num++;
       }
       /*for(int i =0; contacts[i].name!=null ;i++) {
         print(contacts[i]);
