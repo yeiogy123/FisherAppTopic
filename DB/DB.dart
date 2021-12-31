@@ -21,7 +21,7 @@ class ContactsDatabase {
           port: 3306,
           db: "fish"
       ));
-      /*await connect.query('CREATE TABLE `users` '
+      await connect.query('CREATE TABLE `users` '
           '(`id` varchar(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
           '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
           '`fisher_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
@@ -29,8 +29,6 @@ class ContactsDatabase {
           '`job` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
           '`phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,'
           'PRIMARY KEY(`name`))');
-
-       */
       didinit = true;
     }
     void close(){
@@ -47,14 +45,20 @@ class ContactsDatabase {
       if(!didinit) await init();
       return connect;
     }
-    Future getContactsForTime() async{
+    Future <List<Contact>> getContactsForTime() async{
       try{
         var db = await _contactsDatabase._getDB();
         Results contact = await db.query('SELECT * FROM fish.users');
-        print(contact);
+        List<Contact> contacts = <Contact>[];
+        int complete = 0;
+        for(var i in contact) {
+          contacts.add(Contact.fromMap(i.fields));
+        }
+        return contacts;
       }catch(e){
         print('error');
         print(e.toString());
+        return [];
       }
     }
   Future<EventObject> getContactsUsingDB() async {
@@ -67,8 +71,8 @@ class ContactsDatabase {
       print(contact);
       List<Contact> contacts = <Contact>[];
       int complete = 0;
-      for(int i = 0 ; i < contact.toList().length ; i++) {
-        contacts.add(Contact.fromMap(contact.toList().elementAt(i).fields));
+      for(var i in contact) {
+        contacts.add(Contact.fromMap(i.fields));
       }
       await db.close();
       complete = await 1;
