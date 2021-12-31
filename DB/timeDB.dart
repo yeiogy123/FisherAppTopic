@@ -105,7 +105,7 @@ class timeDatabase {
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'ZSP95142'));
+        password: 'Lin15051780!'));
 
     // Create a table
     await cntdb.query(
@@ -202,7 +202,7 @@ class split_time_table{
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'ZSP95142'));
+        password: 'Lin15051780!'));
     await cntdb.query(
         'CREATE TABLE `splittime` ( '
             '`id` int not null auto_increment,'
@@ -235,23 +235,17 @@ class split_time_table{
       }
       else
         date = date.replaceRange(8, 10, c_day.toString());
-      print(date);
       Results contact = await db.query('SELECT * FROM fish.splittime where (day="$date") and (name="$name") ');
       List<splitTimeData>  contacts = <splitTimeData> [];
-      print('hi');
-      print(contact.toList().length);
       int num = 0 ;
       for(var i in contact){
-        print(i.fields);
-        //print(splitTimeData.fromMap(i.fields));
         contacts.add(splitTimeData.fromMap(i.fields));
-        print(contacts.elementAt(num));
         num++;
       }
-        for(var a in contacts) {
-          for (int i = a.start; i < a.end; i++)
-            table[i] = 1;
-        }
+      for(var a in contacts) {
+        for (int i = a.start; i < a.end; i++)
+          table[i] = 1;
+      }
       return table;//contacts;
     }catch(e){
       print('error');
