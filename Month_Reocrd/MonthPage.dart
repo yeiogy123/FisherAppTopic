@@ -81,7 +81,9 @@ class _CheckPageState extends State<CheckPage> {
                     }
                 ),),
                 title: Text(listItems[index].name),
-                subtitle: Text('Today\'s working hour: ' + listItems[index].today_hr + ' Month\'s working hour: ' + listItems[index].month_hr),
+                subtitle: Text(
+                    'Today\'s working hour: ' + listItems[index].today_hr +
+                        ' Month\'s working hour: ' + listItems[index].month_hr),
               );
             },
           ),
@@ -119,7 +121,8 @@ class _CheckPageState extends State<CheckPage> {
   void jump_daywork(BuildContext context, who) {
     Navigator.push(context,
         MaterialPageRoute(
-            builder: (context) => Day_24hr(name: listItems[who].name, c_day: choose_day)));
+            builder: (context) =>
+                Day_24hr(name: listItems[who].name, c_day: choose_day)));
   }
 
   Future ToDB() async {
@@ -127,24 +130,22 @@ class _CheckPageState extends State<CheckPage> {
     List<Contact> a = await c.getContactsForTime();
     listItems.clear();
     int a_length = a.toList().length;
-    for(int i = 0 ; i < a_length ; i++){
-      listItems.add(People(name: a.elementAt(i).name, month_hr:'0', today_hr:'0'));
+    for (var i in a) {
+      listItems.add(People(name: i.name, month_hr: '0', today_hr: '0'));
     }
     timeDatabase d = timeDatabase.get();
     List<Time> b = await d.usersGettime();
-    for(int j = 0 ; j < b.toList().length ; j++){
-      for(int k = 0 ; k < a_length ; k++){
-        if(b.elementAt(j).name==listItems[k].name){
+    for (int j = 0; j < b.toList().length; j++) {
+      for (int k = 0; k < a_length; k++) {
+        if (b.elementAt(j).name == listItems[k].name) {
           DateTime cmp = b.elementAt(j).startTime;
-          if(cmp.month==choose_month && cmp.year==choose_year){
+          if (cmp.month == choose_month && cmp.year == choose_year) {
             double temp = double.parse(listItems[k].month_hr);
             temp = temp + b.elementAt(j).workTime;
-            listItems[k].month_hr= temp.toStringAsFixed(1);
-            if(cmp.day==choose_day) {
+            listItems[k].month_hr = temp.toStringAsFixed(1);
+            if (cmp.day == choose_day) {
               double today = double.parse(listItems[k].today_hr);
-              today = today + b
-                  .elementAt(j)
-                  .workTime;
+              today = today + b.elementAt(j).workTime;
               listItems[k].today_hr = today.toStringAsFixed(1);
             }
           }
