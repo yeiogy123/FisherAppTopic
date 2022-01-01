@@ -95,7 +95,7 @@ class timeDatabase {
 
   Future init() async{
     // Open a connection (table1 should already exist)
-    cntdb = await MySqlConnection.connect(ConnectionSettings(
+    this.cntdb = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2',
         port: 3306,
         user: 'root',
@@ -112,7 +112,14 @@ class timeDatabase {
             ' PRIMARY KEY (`id`) )');
     initDB = true;
   }
-
+  Future connection()async{
+    this.cntdb = await MySqlConnection.connect(ConnectionSettings(
+        host: '10.0.2.2',
+        port: 3306,
+        user: 'root',
+        db: 'fish',
+        password: 'ZSP95142'));
+  }
   static timeDatabase get(){
     return _timeDatabase;
   }
@@ -122,6 +129,9 @@ class timeDatabase {
   }
   Future <List<Time>> usersGettime() async{
     try{
+      if(_timeDatabase.initDB){
+        _timeDatabase.connection();
+      }
       var db = await _timeDatabase._getDB();
       Results contact = await db.query('SELECT * FROM fish.timerecord');
       List<Time>  contacts = <Time>[];
@@ -136,7 +146,7 @@ class timeDatabase {
     }
   }
 
-  Future storeSplitTimeUsingDB(Time t) async {
+  static Future storeSplitTimeUsingDB(Time t) async {
     splitTimeData FinalTimeData;
     int startTimeExceed = 0, endTimeExceed = 0;
     if(t.startTime.minute >=30)
@@ -156,7 +166,10 @@ class timeDatabase {
     saveSplitTimeUsingDB(FinalTimeData);
 
   }
-  Future saveSplitTimeUsingDB(splitTimeData target)async{
+  static Future saveSplitTimeUsingDB(splitTimeData target)async{
+    if(_timeDatabase.initDB){
+      _timeDatabase.connection();
+    }
     var db = await _timeDatabase._getDB();
     print(target.storeForm);
     Results affectRows =
@@ -193,7 +206,7 @@ class split_time_table{
 
   Future init() async{
     // Open a connection (table1 should already exist)
-    cntdb = await MySqlConnection.connect(ConnectionSettings(
+    this.cntdb = await MySqlConnection.connect(ConnectionSettings(
         host: '10.0.2.2',
         port: 3306,
         user: 'root',
@@ -212,7 +225,14 @@ class split_time_table{
       await cntdb.query('SELECT * FROM fish.splittime');
     initDB = true;
   }
-
+  Future connection() async{
+    this.cntdb = await MySqlConnection.connect(ConnectionSettings(
+        host: '10.0.2.2',
+        port: 3306,
+        user: 'root',
+        db: 'fish',
+        password: 'ZSP95142'));
+  }
   static split_time_table get(){
     return _split_time_table;
   }
@@ -227,6 +247,9 @@ class split_time_table{
       0,0,0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,0,0];
     try{
+      if(_split_time_table.initDB){
+        _split_time_table.connection();
+      }
       var db = await _split_time_table._getDB();
       String date = d.toString().substring(0, 10);
       if(c_day < 10) {
