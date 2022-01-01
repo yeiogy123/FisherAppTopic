@@ -43,9 +43,6 @@ class splitTimeData{
       this.split[i] = 1;
     return this.split;
   }
-  /*List<int> getTheList(){
-    return json.decode(storeForm);
-  }*/
   static List<int> getTheList(String target){
     List<int> output = List.filled(48, 0);
     int posi = 0;
@@ -53,11 +50,9 @@ class splitTimeData{
     for(String i in target.characters){
       if(i.compareTo('1') == 0 ){
         output[posi] = 1;
-        //print(output[posi]);
         posi++;
       } else if (i.compareTo('0') == 0) {
         output[posi] = 0;
-        //print(output[posi]);
         posi++;
       }
     }
@@ -105,7 +100,7 @@ class timeDatabase {
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'Lin15051780!'));
+        password: 'ZSP95142'));
 
     // Create a table
     await cntdb.query(
@@ -144,16 +139,17 @@ class timeDatabase {
   Future storeSplitTimeUsingDB(Time t) async {
     splitTimeData FinalTimeData;
     int startTimeExceed = 0, endTimeExceed = 0;
-    if(t.startTime.minute > 30)
+    if(t.startTime.minute >=30)
       startTimeExceed = 1;
-    if(t.finishTime.minute > 30)
+    if(t.finishTime.minute >= 30)
       endTimeExceed = 1;
     splitTimeData temp = splitTimeData(
       name: t.name,
       day : t.startTime.toString().substring(0, 10),
-      start: t.startTime.hour <<1 + startTimeExceed,
-      end: t.finishTime.hour << 1 + endTimeExceed,
+      start: (t.startTime.hour *2) + startTimeExceed,
+      end: (t.finishTime.hour *2) + endTimeExceed,
     );
+    print(temp);
     temp.split = temp.splitTheTime();
     temp.storeForm = temp.storeStringFromList();
     FinalTimeData = temp;
@@ -202,14 +198,18 @@ class split_time_table{
         port: 3306,
         user: 'root',
         db: 'fish',
-        password: 'Lin15051780!'));
-    await cntdb.query(
-        'CREATE TABLE `splittime` ( '
-            '`id` int not null auto_increment,'
-            '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            '`day` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            '`storeform` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
-            ' PRIMARY KEY (`id`) )');
+        password: 'ZSP95142'));
+      /*await cntdb.query(
+          'CREATE TABLE `splittime` ( '
+              '`id` int not null auto_increment,'
+              '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
+              '`day` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
+              '`storeform` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,'
+              ' PRIMARY KEY (`id`) )');
+
+
+       */
+      await cntdb.query('SELECT * FROM fish.splittime');
     initDB = true;
   }
 
@@ -242,10 +242,11 @@ class split_time_table{
         contacts.add(splitTimeData.fromMap(i.fields));
         num++;
       }
-      for(var a in contacts) {
-        for (int i = a.start; i < a.end; i++)
-          table[i] = 1;
-      }
+        for(var a in contacts) {
+          for (int i = a.start; i < a.end; i++)
+            table[i] = 1;
+        }
+        cntdb.close();
       return table;//contacts;
     }catch(e){
       print('error');
