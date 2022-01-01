@@ -31,6 +31,15 @@ class ContactsDatabase {
             'PRIMARY KEY(`name`))');
       didinit = true;
     }
+    Future connection() async{
+      this.connect = await MySqlConnection.connect(ConnectionSettings(
+          user: "root",
+          password: "ZSP95142",
+          host: "10.0.2.2",
+          port: 3306,
+          db: "fish"
+      ));
+    }
     void close(){
       connect.close();
       didinit = false;
@@ -45,8 +54,11 @@ class ContactsDatabase {
       if(!didinit) await init();
       return connect;
     }
-    Future <List<Contact>> getContactsForTime() async{
+    static Future <List<Contact>> getContactsForTime() async{
       try{
+        if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
         var db = await _contactsDatabase._getDB();
         Results contact = await db.query('SELECT * FROM fish.users');
         List<Contact> contacts = <Contact>[];
@@ -54,7 +66,7 @@ class ContactsDatabase {
         for(var i in contact) {
           contacts.add(Contact.fromMap(i.fields));
         }
-        await connect.close();
+        db.close();
         return contacts;
       }catch(e){
         print('error');
@@ -62,8 +74,10 @@ class ContactsDatabase {
         return [];
       }
     }
-  Future<EventObject> getContactsUsingDB() async {
-    try {
+    static Future<EventObject> getContactsUsingDB() async {
+      if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
       var db = await _contactsDatabase._getDB();
       Results contact =
       await db.query(
@@ -75,27 +89,27 @@ class ContactsDatabase {
       for(var i in contact) {
         contacts.add(Contact.fromMap(i.fields));
       }
-      await connect.close();
+
+      db.close();
       complete = await 1;
       if (contacts.isNotEmpty) {
         return EventObject(id: Events.ReadContactsSuccessful, object: contacts);
       } else {
         return EventObject(id: Events.NoContactsFound);
       }
-    } catch (e) {
-      print(e.toString());
-      return new EventObject(id: Events.NoContactsFound);
-    }
 
   }
 
-  Future<EventObject> saveContactUsingDB(Contact contact) async {
+  static Future<EventObject> saveContactUsingDB(Contact contact) async {
     try {
+      if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
       var db = await _contactsDatabase._getDB();
       Results affectedRows =
       await db.query('insert into fish.users (name, fisher_id, ct, job, phone) values(?,?,?,?,?)',
           [contact.name, contact.id_number, contact.ct, contact.job, contact.phone]);
-      connect.close();
+      db.close();
       if (affectedRows.isEmpty) {
         return EventObject(
           id: Events.ContactWasCreatedSuccessfully,
@@ -109,12 +123,15 @@ class ContactsDatabase {
     }
   }
 
-  Future<EventObject> removeContactUsingDB(Contact contact) async {
+  static Future<EventObject> removeContactUsingDB(Contact contact) async {
     try {
+      if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
       var db = await ContactsDatabase.get()._getDB();
-
-      Results affectedRows = await db.delete(table:'user',
-          where: {'name' : contact.name});
+      String n = contact.name;
+      Results affectedRows = await db.query('DELETE FROM users WHERE name="$n"');
+      db.close();
       if (affectedRows.isNotEmpty) {
         return EventObject(
           id: Events.ContactWasDeletedSuccessfully,
@@ -129,14 +146,15 @@ class ContactsDatabase {
     }
   }
 
-  Future<EventObject> updateContactUsingDB(Contact contact) async {
+    static Future<EventObject> updateContactUsingDB(Contact contact) async {
     try {
+      if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
       var db = await ContactsDatabase.get()._getDB();
-      Results affectedRows = await db.update(
-          table: 'user',
-          updateData: contact.toMap(),
-          where: {'name' : contact.name});
-
+      String id = contact.id_number, ct = contact.ct, job = contact.job, phone = contact.phone, name=contact.name;
+      Results affectedRows = await db.query('update users set fisher_id="$id", ct="$ct", job="$job", phone="$phone" where (name="$name") ');
+      db.close();
       if (affectedRows.isNotEmpty) {
         return EventObject(
           id: Events.ContactWasUpdatedSuccessfully,
@@ -151,8 +169,11 @@ class ContactsDatabase {
     }
   }
 
-  Future<EventObject> searchContactsUsingDB(String searchQuery) async {
+    static Future<EventObject>  searchContactsUsingDB(String searchQuery) async {
     try {
+      if(_contactsDatabase.didinit){
+        _contactsDatabase.connection();
+      }
       var db = await ContactsDatabase.get()._getDB();
 
       //Like query not used here in searching cuz its not working for sqflite
@@ -174,6 +195,7 @@ class ContactsDatabase {
             searchedContacts.add(contact);
           }
         }
+        db.close();
         if (searchedContacts.isNotEmpty) {
           return EventObject(
               id: Events.SearchContactsSuccessful, object: searchedContacts);
