@@ -212,7 +212,7 @@ class split_time_table{
         user: 'root',
         db: 'fish',
         password: 'ZSP95142'));
-      /*await cntdb.query(
+      await cntdb.query(
           'CREATE TABLE `splittime` ( '
               '`id` int not null auto_increment,'
               '`name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,'
@@ -221,8 +221,8 @@ class split_time_table{
               ' PRIMARY KEY (`id`) )');
 
 
-       */
-      await cntdb.query('SELECT * FROM fish.splittime');
+       
+      //await cntdb.query('SELECT * FROM fish.splittime');
     initDB = true;
   }
   Future connection() async{
