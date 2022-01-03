@@ -12,7 +12,6 @@ class Calender extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue[200],
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -23,7 +22,7 @@ class Calender extends StatelessWidget {
         ),
         title: const Text('Calendar',
             style: TextStyle(
-                color: Colors.deepOrange,
+                color: Colors.white,
                 fontSize: 30,
                 fontWeight: FontWeight.bold)),
       ),
@@ -34,11 +33,18 @@ class Calender extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  color: Colors.yellow,
-                  child: const Text('Month: ', style: TextStyle(fontSize: 50)),
+                  child:  Text.rich(
+                    TextSpan(
+                      text:'Month: ',
+                      style: TextStyle(
+                          fontSize: 50,
+                        color:Colors.blue,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
                 ),
                 Container(
-                  color: Colors.redAccent,
                   child: Text(month_text, style: TextStyle(fontSize: 50)),
                 ),
               ],
@@ -56,14 +62,14 @@ class Calender extends StatelessWidget {
               },//每個佔14%
               //設定表格樣式
               border: TableBorder.all(
-                  color: Colors.black87, width: 3.0, style: BorderStyle.solid),
+                  color: Colors.white60, width: 3.0, style: BorderStyle.solid),
               children: <TableRow>[
                 TableRow(
                   children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -77,8 +83,8 @@ class Calender extends StatelessWidget {
                     ),//1
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -92,8 +98,8 @@ class Calender extends StatelessWidget {
                     ),//2
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -107,8 +113,8 @@ class Calender extends StatelessWidget {
                     ),//3
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -122,8 +128,8 @@ class Calender extends StatelessWidget {
                     ),//4
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -137,8 +143,8 @@ class Calender extends StatelessWidget {
                     ),//5
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -152,8 +158,8 @@ class Calender extends StatelessWidget {
                     ),//6
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -171,8 +177,8 @@ class Calender extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -186,8 +192,8 @@ class Calender extends StatelessWidget {
                     ),//8
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -201,8 +207,8 @@ class Calender extends StatelessWidget {
                     ),//9
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -216,8 +222,8 @@ class Calender extends StatelessWidget {
                     ),//10
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -231,8 +237,8 @@ class Calender extends StatelessWidget {
                     ),//11
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -246,8 +252,8 @@ class Calender extends StatelessWidget {
                     ),//12
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -261,8 +267,8 @@ class Calender extends StatelessWidget {
                     ),//13
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -280,8 +286,8 @@ class Calender extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -295,8 +301,8 @@ class Calender extends StatelessWidget {
                     ),//15
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -310,8 +316,8 @@ class Calender extends StatelessWidget {
                     ),//16
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -325,8 +331,8 @@ class Calender extends StatelessWidget {
                     ),//17
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -340,8 +346,8 @@ class Calender extends StatelessWidget {
                     ),//18
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -355,8 +361,8 @@ class Calender extends StatelessWidget {
                     ),//19
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -370,8 +376,8 @@ class Calender extends StatelessWidget {
                     ),//20
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -389,8 +395,8 @@ class Calender extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -404,8 +410,8 @@ class Calender extends StatelessWidget {
                     ),//22
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -419,8 +425,8 @@ class Calender extends StatelessWidget {
                     ),//23
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -434,8 +440,8 @@ class Calender extends StatelessWidget {
                     ),//24
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -449,8 +455,8 @@ class Calender extends StatelessWidget {
                     ),//25
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -464,8 +470,8 @@ class Calender extends StatelessWidget {
                     ),//26
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -479,8 +485,8 @@ class Calender extends StatelessWidget {
                     ),//27
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -498,8 +504,8 @@ class Calender extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -513,8 +519,8 @@ class Calender extends StatelessWidget {
                     ),//29
                     if(time.month!=2) ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -528,8 +534,8 @@ class Calender extends StatelessWidget {
                     ),//30
                     if(time.month==2) ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -540,8 +546,8 @@ class Calender extends StatelessWidget {
                     ),//30,2月沒有30天,NULL button
                     if(time.month==1 || time.month==3 || time.month==5 || time.month==7 || time.month==8 || time.month==10 || time.month==12) ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -555,8 +561,8 @@ class Calender extends StatelessWidget {
                     ),//31
                     if(time.month==2 || time.month==4 || time.month==6 || time.month==9 || time.month==11) ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -567,8 +573,8 @@ class Calender extends StatelessWidget {
                     ),//31,小月沒有31天,NULL button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -579,8 +585,8 @@ class Calender extends StatelessWidget {
                     ),//No 32 day,NULL button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -591,8 +597,8 @@ class Calender extends StatelessWidget {
                     ),//No 33 day,NULL button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
@@ -603,8 +609,8 @@ class Calender extends StatelessWidget {
                     ),//No 34 day,NULL button
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.brown, // background
-                        onPrimary: Colors.white, // foreground
+                        primary: Colors.grey, // background
+                        onPrimary: Colors.black54, // foreground
                         shadowColor: Colors.transparent,
                         minimumSize: const Size(200, 50),
                         textStyle:
